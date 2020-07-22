@@ -10,7 +10,14 @@ import (
 type Module interface {
 	OnInit()
 	OnDestroy()
+	OnSetupHandlers()
 	Run(closeSig chan bool)
+	AfterRun(args[] interface{})
+	SignalAfterRun()
+	GetId() int
+	SetId(n int)
+	GetName() string
+	SetName(s string)
 }
 
 type module struct {
@@ -31,13 +38,22 @@ func Register(mi Module) {
 
 func Init() {
 	for i := 0; i < len(mods); i++ {
+		mods[i].mi.OnSetupHandlers()
+		log.Release("service [ %s : %d ] OnInit begin\n", mods[i].mi.GetName(), mods[i].mi.GetId())
 		mods[i].mi.OnInit()
+		log.Release("service [ %s : %d ] OnInit end", mods[i].mi.GetName(), mods[i].mi.GetId())
 	}
 
 	for i := 0; i < len(mods); i++ {
 		m := mods[i]
 		m.wg.Add(1)
 		go run(m)
+	}
+
+	for i := 0; i < len(mods); i++ {
+		m := mods[i]
+		log.Release("service [ %s : %d ] SignalAfterRun", m.mi.GetName(), m.mi.GetId())
+		go m.mi.SignalAfterRun()
 	}
 }
 
@@ -68,5 +84,7 @@ func destroy(m *module) {
 		}
 	}()
 
+	log.Debug("service [ %s : %d ] OnDestory begin", m.mi.GetName(), m.mi.GetId())
 	m.mi.OnDestroy()
+	log.Debug("service [ %s : %d ] OnDestory end", m.mi.GetName(), m.mi.GetId())
 }

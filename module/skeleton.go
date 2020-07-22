@@ -99,14 +99,14 @@ func (s *Skeleton) NewLinearContext() *g.LinearContext {
 	return s.g.NewLinearContext()
 }
 
-func (s *Skeleton) AsynCall(server *chanrpc.Server, id interface{}, args ...interface{}) {
-	if s.AsynCallLen == 0 {
-		panic("invalid AsynCallLen")
-	}
-
-	s.client.Attach(server)
-	s.client.AsynCall(id, args...)
-}
+// func (s *Skeleton) AsynCall(server *chanrpc.Server, id interface{}, args ...interface{}) {
+// 	if s.AsynCallLen == 0 {
+// 		panic("invalid AsynCallLen")
+// 	}
+//
+// 	s.client.Attach(server)
+// 	s.client.AsynCall(id, args...)
+// }
 
 func (s *Skeleton) RegisterChanRPC(id interface{}, f interface{}) {
 	if s.ChanRPCServer == nil {

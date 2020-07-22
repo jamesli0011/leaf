@@ -76,7 +76,7 @@ func (server *TCPServer) run() {
 				if max := 1 * time.Second; tempDelay > max {
 					tempDelay = max
 				}
-				log.Release("accept error: %v; retrying in %v", err, tempDelay)
+				log.Error("accept error: %v; retrying in %v", err, tempDelay)
 				time.Sleep(tempDelay)
 				continue
 			}
@@ -88,7 +88,7 @@ func (server *TCPServer) run() {
 		if len(server.conns) >= server.MaxConnNum {
 			server.mutexConns.Unlock()
 			conn.Close()
-			log.Debug("too many connections")
+			log.Error("too many connections")
 			continue
 		}
 		server.conns[conn] = struct{}{}

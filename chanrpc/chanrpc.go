@@ -138,11 +138,14 @@ func (s *Server) Exec(ci *CallInfo) {
 func (s *Server) Go(id interface{}, args ...interface{}) {
 	f := s.functions[id]
 	if f == nil {
+		log.Error("service send failed, no method : %v", id)
 		return
 	}
 
 	defer func() {
-		recover()
+		if err := recover(); err != nil {
+			log.Error("go failed", err)
+		}
 	}()
 
 	s.ChanCall <- &CallInfo{
