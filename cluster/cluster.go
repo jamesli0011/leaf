@@ -1,8 +1,8 @@
 package cluster
 
 import (
-	"github.com/name5566/leaf/conf"
-	"github.com/name5566/leaf/network"
+	"github.com/jamesli0011/leaf/conf"
+	"github.com/jamesli0011/leaf/network"
 	"math"
 	"time"
 )
